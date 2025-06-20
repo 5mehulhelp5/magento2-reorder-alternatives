@@ -1,0 +1,19 @@
+{
+    "name": "elgentos/magento2-reorder-alternatives",
+    "description": "Magento 2 module for handling reorder alternatives",
+    "type": "magento2-module",
+    "license": "proprietary",
+    "require": {
+        "php": "^8.3",
+        "magento/framework": "^103.0",
+        "magento/module-sales": "^104.0"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Elgentos\\ReorderAlternatives\\": ""
+        }
+    }
+}

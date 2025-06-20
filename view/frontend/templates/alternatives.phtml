@@ -1,0 +1,29 @@
+<?php
+/** @var \Elgentos\ReorderAlternatives\Block\Alternatives $block */
+$nonSalableProducts = $block->getNonSalableProducts();
+$alternativeProducts = $block->getAlternativeProducts();
+?>
+
+<?php if($alternativeProducts): ?>
+    <form action="<?php echo $block->getUrl('sales/order/alternative_reorder') ?>" method="post">
+        <?php foreach ($nonSalableProducts as $nonSalableProduct): ?>
+            <?php if (isset($alternativeProducts[$nonSalableProduct->getId()])): ?>
+                <p><?=__('Unfortunately the product %1 is not available anymore.', $nonSalableProduct->getName()); ?></p>
+                <p><?=__('Please select an alternative for %1 (SKU %2).', $nonSalableProduct->getName(), $nonSalableProduct->getSku());?></p>
+                <ul>
+                    <?php foreach ($alternativeProducts[$nonSalableProduct->getId()] as $product): ?>
+                        <li>
+                            <input type="checkbox" name="product[<?= $product->getId() ?>]" value="<?= $product->getId() ?>">
+                            <?= $product->getName() ?> (SKU <?= $product->getSku(); ?>)
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php else: ?>
+                <p><?=__('No alternative products available for this product.');?></p>
+            <?php endif; ?>
+        <?php endforeach; ?>
+        <button type="submit"><?=__('Reorder now');?></button>
+    </form>
+<?php else: ?>
+    <p><?=__('No alternative products available, reordering is not possible.');?></p>
+<?php endif; ?>

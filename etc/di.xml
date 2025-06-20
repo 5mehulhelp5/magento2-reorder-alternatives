@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Catalog\Model\Product\LinkTypeProvider">
+        <arguments>
+            <argument name="linkTypes" xsi:type="array">
+                <item name="alternatives" xsi:type="const">Elgentos\ReorderAlternatives\Model\Product\Link::LINK_TYPE_ALTERNATIVES_ID</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Catalog\Model\ProductLink\CollectionProvider">
+        <arguments>
+            <argument name="providers" xsi:type="array">
+                <item name="alternatives" xsi:type="object">Elgentos\ReorderAlternatives\Model\ProductLink\CollectionProvider\AlternativeProducts</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Elgentos\ReorderAlternatives\Model\ProductLink\CollectionProvider\AlternativeProducts">
+        <plugin name="change_alternatives_link_before" type="Elgentos\ReorderAlternatives\Plugin\UpdateToAlternativesLinkModel"/>
+    </type>
+</config>
