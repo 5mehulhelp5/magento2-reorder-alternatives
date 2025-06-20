@@ -12,6 +12,7 @@ use Magento\Catalog\Model\ResourceModel\Product\Link\Product\CollectionFactory a
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\InputException;
 use Magento\Framework\View\Element\Template;
+use Magento\Sales\Model\OrderRepository;
 
 class Alternatives extends Template
 {
@@ -21,6 +22,7 @@ class Alternatives extends Template
         private readonly ConfigurableResource $configurableResource,
         private readonly ProductCollectionFactory $productCollectionFactory,
         private readonly LinkProductCollectionFactory $linkProductCollectionFactory,
+        private readonly OrderRepository $orderRepository,
         private readonly Link $linkModel,
         array $data = []
     ) {
@@ -36,6 +38,19 @@ class Alternatives extends Template
         return $this->productCollectionFactory->create()
             ->addAttributeToSelect('*')
             ->addAttributeToFilter('entity_id', ['in' => $nonSalableProductIds]);
+    }
+
+    public function getSalableProducts()
+    {
+        $salableProducts = [];
+        $nonSalableProductIds = explode(',', $this->getRequest()->getParam('nonSalableProducts'));
+        $order = $this->orderRepository->get($this->getRequest()->getParam('orderId'));
+        foreach ($order->getItems() as $item) {
+            if (!in_array($item->getProductId(), $nonSalableProductIds)) {
+                $salableProducts[] = $item->getProductId();
+            }
+        }
+        return $salableProducts;
     }
 
     public function getAlternativeProducts(): array

@@ -1,20 +1,25 @@
 <?php
 /** @var \Elgentos\ReorderAlternatives\Block\Alternatives $block */
 $nonSalableProducts = $block->getNonSalableProducts();
+$salableProducts = $block->getSalableProducts();
 $alternativeProducts = $block->getAlternativeProducts();
 ?>
 
 <?php if($alternativeProducts): ?>
-    <form action="<?php echo $block->getUrl('sales/order/alternative_reorder') ?>" method="post">
+    <form action="<?php echo $block->getUrl('sales/order/alternativereorder') ?>" method="post">
+        <?php foreach($salableProducts as $salableProductId): ?>
+        <input type="hidden" name="product[<?=$salableProductId;?>-<?=$salableProductId;?>]" value="<?=$salableProductId;?>" />
+        <?php endforeach; ?>
+        <?php echo $block->getBlockHtml('formkey'); ?>
         <?php foreach ($nonSalableProducts as $nonSalableProduct): ?>
             <?php if (isset($alternativeProducts[$nonSalableProduct->getId()])): ?>
-                <p><?=__('Unfortunately the product %1 is not available anymore.', $nonSalableProduct->getName()); ?></p>
-                <p><?=__('Please select an alternative for %1 (SKU %2).', $nonSalableProduct->getName(), $nonSalableProduct->getSku());?></p>
-                <ul>
+                <p class="py-2"><?=__('Unfortunately the product %1 is not available anymore.', $nonSalableProduct->getName()); ?></p>
+                <p class="py-2"><?=__('Please select an alternative for %1 (SKU %2).', $nonSalableProduct->getName(), $nonSalableProduct->getSku());?></p>
+                <ul class="py-2">
                     <?php foreach ($alternativeProducts[$nonSalableProduct->getId()] as $product): ?>
-                        <li>
-                            <input type="checkbox" name="product[<?= $product->getId() ?>]" value="<?= $product->getId() ?>">
-                            <?= $product->getName() ?> (SKU <?= $product->getSku(); ?>)
+                        <li class="py-2">
+                            <input type="checkbox" class="mr-2" name="product[<?= $nonSalableProduct->getId() . '-' . $product->getId() ?>]" id="product-<?= $nonSalableProduct->getId() . '-' . $product->getId() ?>" value="<?= $nonSalableProduct->getId() . '-' . $product->getId() ?>">
+                            <label for="product-<?= $nonSalableProduct->getId() . '-' . $product->getId() ?>"><?= $product->getName() ?> (SKU <?= $product->getSku(); ?>)</label>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -22,7 +27,7 @@ $alternativeProducts = $block->getAlternativeProducts();
                 <p><?=__('No alternative products available for this product.');?></p>
             <?php endif; ?>
         <?php endforeach; ?>
-        <button type="submit"><?=__('Reorder now');?></button>
+        <button type="submit" class="p-2 bg-green-100"><?=__('Reorder now');?></button>
     </form>
 <?php else: ?>
     <p><?=__('No alternative products available, reordering is not possible.');?></p>

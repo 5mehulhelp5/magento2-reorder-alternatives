@@ -33,10 +33,16 @@ class AlternativeReorder extends Action
     public function execute()
     {
         $selectedProducts = $this->getRequest()->getParam('product', []);
-        foreach ($selectedProducts as $productId) {
+        foreach ($selectedProducts as $productIds) {
+            if (str_contains($productIds, '-')) {
+                [$originalProductId, $productId] = explode('-',
+                    $productIds);
+            } else {
+                $productId = $productIds;
+            }
             try {
-                $product = $this->productRepository->getById((int)$productId);
-                $this->cart->addProduct($product, 1); // Assumes quantity 1
+                $product = $this->productRepository->getById($productId);
+                $this->cart->addProduct($product, 1); // Assume quantity 1
             } catch (NoSuchEntityException $e) {
                 // Log or handle entity not found
             }
