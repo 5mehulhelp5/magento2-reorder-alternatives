@@ -1,4 +1,4 @@
-# Elgentos_ReorderAlternatives
+# elgentos/magento2-reorder-alternatives
 The Elgentos_ReorderAlternatives Magento 2 module is designed to enhance the reorder functionality by providing alternative products suggestions. This extension allows merchants to define alternatives for any product, increasing the likelihood of successful reorders even if the original product is unavailable.
 
 ## Features
